@@ -16,7 +16,7 @@ func main() {
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	} else {
-		fmt.Fprintf("OK. Port %s will be used.\n", port)
+		fmt.Printf("OK. Port %s will be used.\n", port)
 	}
 
 	http.HandleFunc("/",
