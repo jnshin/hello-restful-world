@@ -6,10 +6,16 @@ import (
 	"html"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
 	fmt.Println("Hello RESTful World!")
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
 
 	http.HandleFunc("/",
 		func(w http.ResponseWriter, r *http.Request) {
@@ -17,5 +23,5 @@ func main() {
 				html.EscapeString(r.URL.Path))
 		})
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
