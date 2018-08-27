@@ -7,9 +7,16 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 func main() {
+
+	/* buffer 없는 channel 로 동기화 */
+	ticker := time.NewTicker(time.Second)
+	defer ticker.Stop()
+	currTime := time.Now()
+
 	fmt.Println("Hello RESTful World!")
 
 	port := os.Getenv("PORT")
@@ -21,9 +28,17 @@ func main() {
 
 	http.HandleFunc("/",
 		func(w http.ResponseWriter, r *http.Request) {
-			fmt.Fprintf(w, "Hello, %q",
-				html.EscapeString(r.URL.Path))
+			fmt.Fprintf(w, "Hello, %q at %s",
+				html.EscapeString(r.URL.Path), currTime.String())
 		})
+
+	/* Setup sub-routines */
+
+	go func() {
+		for {
+			currTime = <-ticker.C
+		}
+	}()
 
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
